@@ -136,4 +136,9 @@ def generate_sql_schema(html_code):
 
     response = chat_session.send_message("Generate SQL schema")
     return response.text
+    
+# Sai Ram Navuluri: Main Routes Setup
 
+@app.route('/')
+def index():
+    return render_template('index.html')
