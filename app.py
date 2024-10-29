@@ -103,3 +103,37 @@ def generate_prototype(description, logo_url=None, functionality=False, multiple
 
     response = chat_session.send_message("Generate the web prototype")
     return response.text
+
+# Jyotsana Parkhedkar: SQL Schema Generation Helper Function
+
+# Helper function to generate SQL schema based on HTML code
+def generate_sql_schema(html_code):
+    prompt = f"""
+    You are a database design assistant. Based on the following HTML code for a web page, generate an SQL schema that includes tables, primary keys, and necessary fields to support the functionality of this page.
+
+    HTML Code:
+    {html_code}
+
+    Only output SQL code. Do not include explanations.
+    """
+
+    generation_config = {
+        "temperature": 1.2,
+        "top_p": 0.95,
+        "top_k": 64,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
+    }
+
+    chat_session = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=generation_config,
+    ).start_chat(
+        history=[
+            {"role": "user", "parts": [prompt]}
+        ]
+    )
+
+    response = chat_session.send_message("Generate SQL schema")
+    return response.text
+
