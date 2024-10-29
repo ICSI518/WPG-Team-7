@@ -44,3 +44,62 @@ def fetch_images(description, num_images=3):
 
     return image_urls
 
+# Sai Satwik Bikumandla: Prototype Generation Helper Function
+
+# Helper function to generate prototype with Gemini API
+def generate_prototype(description, logo_url=None, functionality=False, multiple_pages=False):
+    image_urls = fetch_images(description)
+    images_html = "".join([f'<img src="{url}" alt="Image related to {description}" style="width:100%; height:auto;">' for url in image_urls])
+
+    # Build the detailed prompt for front-end prototype generation - Used GenAI's Assistance to improve this prompt- First written a rough prompt then gave to ChatGPT-4o and refined the old prompt
+    prompt = f"""
+    As an expert web development assistant, your task is to create fully executable, high-quality HTML, CSS, and JavaScript code that meets the following project description: {description}.
+
+    Your output must include:
+    1. A fully structured HTML5 document with well-organized sections, including <head>, <body>, and semantic tags like <header>, <main>, <section>, and <footer>, following best practices for readability and accessibility.
+    2. A responsive design that adapts seamlessly to both mobile and desktop screens. Employ media queries to ensure an optimal, user-friendly experience across all device sizes.
+    3. Modern layout techniques, such as Flexbox or CSS Grid, to create a clean, efficient layout that enhances user navigation and visual appeal.
+    4. Integration of the following images in the specified sections of the layout, with appropriate dimensions and positioning for a polished, boxed design:
+       {images_html}
+    5. Self-contained internal CSS styles that avoid external libraries (e.g., Bootstrap), with a modern, visually clean color scheme that complements the described theme.
+    6. Embedded JavaScript to add relevant interactivity, such as form handling, toggling content, or button actions. Code should be minimalistic, focusing only on required functionalities.
+    7. A clear and accessible navigation bar at the top, with organized sections based on content needs and a footer at the bottom. Utilize balanced spacing, margins, and padding to achieve a cohesive and visually harmonious layout.
+    8. Consistent, appealing typography with well-chosen font sizes, line spacing, and weights to enhance readability. Use a Google font like 'Roboto' or 'Open Sans' for a professional, modern look.
+    9. Consistent styling throughout the interface, ensuring that sizes, colors, and spacing align to maintain a cohesive user experience.
+    10. The response should be a complete, standalone 'index.html' file, starting with <!DOCTYPE html> and ending with </html>, without additional comments or explanations.
+    """
+
+    if logo_url:
+        prompt += f"\nPlace the following logo prominently within the layout, following modern web design standards: {logo_url}. \n- Position the logo in an intuitive and visually balanced location, such as the top-left corner of the header, ensuring it aligns with the overall page structure. \n- Apply appropriate formatting to integrate the logo seamlessly with the design, including responsive sizing and padding to maintain clarity and proportion on various screen sizes.\n - Ensure the logo is styled consistently with the theme and layout, complementing the page's color scheme and aesthetic."
+
+    if functionality:
+        prompt += "\nEnsure the webpage includes all necessary JavaScript for interactivity, creating a dynamic user experience. Implement the following interactive features:\n - A welcome pop-up that appears when the page loads, greeting the user and enhancing engagement. This pop-up should be dismissible and styled to match the page theme. \n- Add interactive elements, such as buttons and forms, that use pop-up modals or alerts relevant to the page content. These elements should be intuitive and provide feedback or additional information when interacted with. \n - Design pop-ups to appear contextually, ensuring they enhance navigation and user experience without overwhelming the layout. \n- Make the Menu of the NavBar funtional"
+
+    prompt += """
+    Provide high-quality, professional code that adheres to modern web development standards, using well-structured UI components and best practices for clean, maintainable design.
+    - Ensure the prototype is fully functional, with JavaScript handling all interactive elements.
+    - Balance the focus on both User Interface (UI) and User Experience (UX), creating an interface that is visually appealing and intuitive to navigate.
+    - The response should consist solely of an HTML document with embedded CSS and JavaScript. No additional explanations or comments are needed.
+    - The output should be a complete and ready-to-run 'index.html' file, starting with <!DOCTYPE html> and ending with </html>.
+"""
+
+
+    generation_config = {
+        "temperature": 1.6,
+        "top_p": 0.95,
+        "top_k": 64,
+        "max_output_tokens": 8192,
+        "response_mime_type": "text/plain",
+    }
+
+    chat_session = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=generation_config,
+    ).start_chat(
+        history=[
+            {"role": "user", "parts": [prompt]}
+        ]
+    )
+
+    response = chat_session.send_message("Generate the web prototype")
+    return response.text
