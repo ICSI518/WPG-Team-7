@@ -192,3 +192,8 @@ def download_schema():
         return send_file('schema.sql', as_attachment=True)
     else:
         return jsonify({"error": "SQL schema not found"}), 404
+
+# Krishna Sree: Application Run Configuration
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5005)  # Change port if required
