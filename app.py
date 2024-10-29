@@ -18,6 +18,20 @@ import os
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
+# Sathvika Chitti: Setup and Configuration
+
+# Download NLTK resources if not already downloaded
+nltk.download('stopwords')
+nltk.download('punkt')
+
+app = Flask(__name__)
+
+# Configure Gemini API
+genai.configure(api_key="AIzaSyCZbyF-hRHTxcoiCpKMAMpqZSTsgR68BDo")
+
+# Unsplash API Access Key
+UNSPLASH_ACCESS_KEY = 'DLuEnJUi2bDtoz2AD3GzcjH382l8_3VwPX75lMXrsT0'
+
 # Kona Venkata Sylesh: Image Fetching Helper Function
 
 # Helper function to fetch images from Unsplash
