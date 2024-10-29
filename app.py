@@ -142,3 +142,30 @@ def generate_sql_schema(html_code):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# Sai Satwik Bikumandla: Prototype Generation Route
+
+@app.route('/generate-prototype', methods=['POST'])
+def generate_prototype_route():
+    data = request.get_json()
+
+    description = data.get('description')
+    logo_url = data.get('logo')
+    functionality = data.get('functionality', False)
+    database = data.get('database', False)
+    multiple_pages = data.get('multiplePages', False)
+
+    try:
+        # First API Call - Generate the front-end code
+        generated_code = generate_prototype(description, logo_url, functionality, multiple_pages)
+
+        sql_schema = None
+        # Second API Call - Generate SQL schema if requested
+        if database:
+            sql_schema = generate_sql_schema(generated_code)
+            with open('schema.sql', 'w') as file:
+                file.write(sql_schema)
+
+        return jsonify({"generated_code": generated_code, "sql_schema": database})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
