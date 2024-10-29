@@ -169,3 +169,11 @@ def generate_prototype_route():
         return jsonify({"generated_code": generated_code, "sql_schema": database})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+# Shreyash Govind Mungilwar: SQL Schema Download Route
+
+@app.route('/download-schema')
+def download_schema():
+    if os.path.exists('schema.sql'):
+        return send_file('schema.sql', as_attachment=True)
+    else:
+        return jsonify({"error": "SQL schema not found"}), 404
