@@ -138,6 +138,19 @@ This source code has few components created using ChatGPT-4o and they are clearl
     <footer>
         <p> 2024 Web Prototype Generator by Team 7, Software Engineering Class | University at Albany</p>
     </footer>
-    
-    <!-- Shreyash Govind Mungilwar - Go to Top Button -->
+
+
+<!-- JavaScript to handle download and other actions -->
+    <!-- Jyotsana R Parkhedkar - Handles download and other interactions -->
+    <script>
+        // Function to download SQL schema if generated
+        function downloadSQL() {
+            window.location.href = '/download-schema';
+        }
+    </script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
+
+<!-- Shreyash Govind Mungilwar - Go to Top Button -->
     <button id="go-to-top" title="Go to Top">Go to Top</button>
